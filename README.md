@@ -3,15 +3,26 @@
 
 ## Tasks:
 Primary MIPS Processor
-1. ALU Design
-2. PC Counter
-3. Instruction Memory
-4. Control Unit
-5. Multiplexer for Reg Edits
-6. Register File
-7. ALU Control Unit
-8. Data Memory
-9. Wrtie Back Unit
+[] ALU Design
+[] PC Counter
+[x] Instruction Memory
+[x] Control Unit
+[] Multiplexer for Reg Edits
+[x] Register File
+[x] ALU Control Unit
+[] Data Memory
+[] Wrtie Back Unit
+
+## Testing:
+[] ALU Design
+[] PC Counter
+[] Instruction Memory
+[] Control Unit
+[] Multiplexer for Reg Edits
+[] Register File
+[] ALU Control Unit
+[] Data Memory
+[] Wrtie Back Unit
 
 Microcontroller Functionality
 1. Specialized Registers
