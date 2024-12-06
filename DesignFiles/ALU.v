@@ -24,9 +24,10 @@ MODE-SPECIFIC FUNCTIONALITY NOTES
 | & (010)   | Bitwise AND operation, no overflow or carry.
 | | (011)   | Bitwise OR operation, no overflow or carry.
 | < (100)   | Set less than; ALUOut is 1 if A < B, otherwise 0.
-| * (101)   | The upper 32 bits of any multiplication result go to MultUpper, 
-             the lower 32 bits go to ALUOut. Overflow if MultUpper is used. 
-| / (110)   | Division; DivZero flag set if B is zero.
+| * (101)   | The upper 32 bits of any multiplication result go to High, 
+             the lower 32 bits go to Low. Overflow if High is used. 
+| / (110)   | Division; DivZero flag set if B is zero. High receives the number of times divided, 
+             Low receives the remainder (modulus)
 
 */
 
