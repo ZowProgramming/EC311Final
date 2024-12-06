@@ -30,12 +30,13 @@ MODE-SPECIFIC FUNCTIONALITY NOTES
 
 */
 
-module ALU(clk, A, B, ALUControl, ALUOut, MultUpper, Zero, CarryOut, Overflow, Negative, DivZero);
+module ALU(clk, A, B, ALUControl, ALUOut, High, Low, Zero, CarryOut, Overflow, Negative, DivZero);
     input clk;
     input [31:0] A, B; //32 Bit inputs
     input [2:0] ALUControl; //Control Signal
     output [31:0] ALUOut; //32 Bit Output
-    output reg [31:0] MultUpper;
+    output reg [31:0] High;
+    output reg [31:0] Low;
     output reg Zero, CarryOut, Overflow, Negative, DivZero; // Output flags
     
     reg [31:0] ALUResult;
@@ -69,17 +70,24 @@ module ALU(clk, A, B, ALUControl, ALUOut, MultUpper, Zero, CarryOut, Overflow, N
             3'b100 : ALUResult = (A<B) ? 32'd1 : 32'd0;
             3'b101 : begin
                 mult_result = A * B;
-                ALUResult = mult_result[31:0];
-                MultUpper = mult_result[63:32];
-                Overflow = (MultUpper != {32{ALUResult[31]}}); /* Overflow is 
-                being checked by comparing the upper 32 bits (MultUpper) against the 
-                sign extension of the lower 32 bits (ALUOut[31]). If these do 
+                Low = mult_result[31:0];
+                High = mult_result[63:32];
+                Overflow = (High != {32{Low[31]}}); /* Overflow is 
+                being checked by comparing the upper 32 bits (High) against the 
+                sign extension of the lower 32 bits (Low[31]). If these do 
                 not match, it indicates the product cannot be represented within 
                 32 bits, signaling an overflow.*/
             end
             3'b110 : begin
-                ALUResult = A / B;
-                DivZero = (B == 0);
+                if (B == 0) begin
+                    DivZero = 1;
+                    High = 0;
+                    Low = 0;
+                end else begin
+                    High = A / B;
+                    Low = A % B;
+                    DivZero = 0;
+                end
             end
         endcase
         Zero = (ALUResult == 0);
