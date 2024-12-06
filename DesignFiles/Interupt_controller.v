@@ -27,6 +27,7 @@ module interupt_controller(clk, reset, intr_rq, intr_bus, intr_in, intr_out, bus
     reg oe_reg, oe_next;
     reg [7:0] intrBus_reg, intrBus_next;
     reg intrOut_reg, intrOut_next; 
+    reg [7:0] flags; // Register to store flags for interrupt sources
 
     always @ (posedge clk or posedge reset) begin : fsm
         if(reset) begin
@@ -43,6 +44,15 @@ module interupt_controller(clk, reset, intr_rq, intr_bus, intr_in, intr_out, bus
             intrOut_reg <= intrOut_next;
             intrIndex_reg <= intrIndex_next;
             intrPtr_reg <= intrPtr_next;
+        end
+    end
+
+    // set flags upon interrupt
+    always @(posedge clk or posedge reset) begin
+        if(reset) begin
+            flags <= 8'b00000000; // clear flags when reset
+        end else begin
+            flags <= flags | intr_rq; // set flags to where interrupt has been requested
         end
     end
 
@@ -73,13 +83,14 @@ module interupt_controller(clk, reset, intr_rq, intr_bus, intr_in, intr_out, bus
     */
 
             S_StartPolling: begin
-                if (intr_rq[intrIndex_reg]) begin           // If the current interrupt source is active.
+                if (|flags) begin           // If the current interrupt source is active.
+                    intrIndex_next = intrIndex_reg; // preserve the current index
                     intrOut_next    =   1'b1;               // Set the interrupt output bit to 1.
                     state_next      =   S_TxIntInfoPolling; // Transmit the information about this interrupt.
                 end
                 else begin                                  // If the current interrupt source is not active.
                     intrOut_next    =   1'b0;               // Make sure interrupt output is zero, redundant.
-                    intrIndex_next  =   intrIndex_reg + 1;  // Check the next interrupt source.
+                    intrIndex_next  =   (intrIndex_reg + 1) % 8;  // Check the next interrupt source. wrap around if needed.
                 end
 
                 oe_next         =   1'b0;                   // Controller is not driving the bus.
@@ -97,6 +108,7 @@ module interupt_controller(clk, reset, intr_rq, intr_bus, intr_in, intr_out, bus
                 if (~intr_in) begin                                 // intr_in is from the processor to the controller.
                     intrOut_next    =   1'b0;                       // If processor has acknowledged the interrupt, lower it.
                     intrBus_next    =   {5'b01011, intrIndex_reg};  // 01011 is the control code that the lower 3 bits are the interrupt ID.
+                    flags[intrIndex_reg] <= 1'b0;                   // clear the flags register after interrupt is processed
                     oe_next         =   1'b1;                       // Controller will drive the bus with this data.
                     state_next      =   S_AckTxInfoRxPolling;       // Go to acknowledge state and wait for the acknowledge.
                 end                                                 // Wait until processor acknowledges the interrupt. Keep output high till that time.
