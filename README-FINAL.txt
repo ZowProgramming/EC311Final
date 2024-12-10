@@ -40,7 +40,7 @@ Supported Assembly Instructions:
 				
 HOW TO RUN:
 -------------------------------------------------------------------------------------
-Push the bitstream provided in the main directory to an FPGA. Our bitstream comes with the Fibonacci program loaded on to the microcontroller. This is set up to advance one program counter with each button click. Therefore this requires two clicks per instruction, so the displayed number will increment every 11 button clicks. 
+Push the bitstream provided in the main directory to an FPGA. Our bitstream comes with the Fibonacci program loaded on to the microcontroller. This is set up to advance one program counter with each button click. Therefore this requires two clicks per instruction, so the displayed number will increment every 11 button clicks, with 13 clicks required for the first transition because there is a buffer instruction line at the beginning of the program. 
 
 CODE STRUCTURE:
 -------------------------------------------------------------------------------------
