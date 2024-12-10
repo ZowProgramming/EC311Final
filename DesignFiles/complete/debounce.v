@@ -16,7 +16,7 @@ module debounce_explicit(
     
     // Artix-7 has a 100MHz clk with a period of 10ns    
     // number of counter bits (2^N * 10ns = ~40ms)
-    parameter N = 14
+    parameter N = 14;
     
     // signal declaration
     reg [1:0] state_reg, next_state;
