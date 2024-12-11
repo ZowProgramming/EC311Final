@@ -12,7 +12,7 @@ Soud Alkharji
 Gidon Gautel
 Yoan Zhao
 
-PROJECT DEMO VIDEO LINK:
+PROJECT DEMO VIDEO LINK: https://www.youtube.com/watch?v=9FqrKM6fkw4 
 -------------------------------------------------------------------------------------
 
 PROJECT OVERVIEW:
